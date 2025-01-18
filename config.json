@@ -3,6 +3,7 @@
   "port" : 8080,
   "smtp-address" : "smtp.gmail.com",
   "smtp-port" : 587,
+  "is-ssl" : false,
   "accessed-ips" : [
     "127.0.0.1"
   ]

@@ -144,9 +144,13 @@ def init_smtp() -> bool:
         return False
 
     try:
-        smtp = smtplib.SMTP(config["smtp-address"], config["smtp-port"])
-        smtp.ehlo()
-        smtp.starttls()
+        if config["is-ssl"]:
+            smtp = smtplib.SMTP_SSL(config["smtp-address"], config["smtp-port"])
+            smtp.ehlo()
+        else:
+            smtp = smtplib.SMTP(config["smtp-address"], config["smtp-port"])
+            smtp.ehlo()
+            smtp.starttls()
     except SMTPException:
         print("Can't connect to SMTP server")
         return False
