@@ -15,7 +15,7 @@ from requests.exceptions import InvalidHeader
 
 app: Flask = Flask("dfhub-uptime")
 config: dict = {}
-DEBUG = True
+DEBUG = False
 smtp = smtplib.SMTP()
 
 @app.route("/")
@@ -75,6 +75,30 @@ def send_html_url():
 
     return "Message request sent!"
 
+@app.route("/api/v1/send-html", methods=["POST"])
+def send_html():
+    """
+    Send a message with HTML-content specified in json param
+    """
+    json_body = request.json
+
+    if not "to" in json_body:
+        abort(400, description="JSON param \"to\" is not specified!")
+    if not "subject" in json_body:
+        abort(400, description="JSON param \"subject\" is not specified!")
+    if not "context" in json_body:
+        abort(400, description="JSON param \"context\" is not specified!")
+
+    msg = MIMEMultipart("message")
+    msg["Subject"] = json_body["subject"]
+    msg["From"] = os.getenv("DFHUB_NOREPLY_APP_MAIL")
+    msg["To"] = json_body["to"]
+
+    attachment = MIMEText(json_body["context"], "html")
+    msg.attach(attachment)
+    smtp.send_message(msg)
+
+    return "Message request sent!"
 
 # Other methods
 
