@@ -1,16 +1,21 @@
-import smtplib
 import sys
-from smtplib import SMTPException
-
 import dotenv
+import os
+
+import smtplib
+from smtplib import SMTPException
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+import requests
 from flask import Flask, request, abort
 import json
 
-import os
+from requests.exceptions import InvalidHeader
 
 app: Flask = Flask("dfhub-uptime")
 config: dict = {}
-DEBUG = False
+DEBUG = True
 smtp = smtplib.SMTP()
 
 @app.route("/")
@@ -40,6 +45,36 @@ def send_raw():
         return "Message request sent!"
     except SMTPException:
         return abort(500, "An internal error occurred while sending a message")
+
+@app.route("/api/v1/send-html-url", methods=["POST"])
+def send_html_url():
+    """
+    Send a message with HTML-content that is delivered via a link
+    """
+    json_body = request.json
+
+    if not "to" in json_body:
+        abort(400, description="JSON param \"to\" is not specified!")
+    if not "subject" in json_body:
+        abort(400, description="JSON param \"subject\" is not specified!")
+    if not "attachment-url" in json_body:
+        abort(400, description="JSON param \"attachment-url\" is not specified!")
+
+    msg = MIMEMultipart("message")
+    msg["Subject"] = json_body["subject"]
+    msg["From"] = os.getenv("DFHUB_NOREPLY_APP_MAIL")
+    msg["To"] = json_body["to"]
+
+    try:
+        html = requests.get(json_body["attachment-url"]).content.decode("utf-8")
+    except Exception:
+        abort(500, "Cannot get the specified resource (attachment_url)!")
+    attachment = MIMEText(html, "html")
+    msg.attach(attachment)
+    smtp.send_message(msg)
+
+    return "Message request sent!"
+
 
 # Other methods
 
