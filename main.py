@@ -175,8 +175,16 @@ if __name__ == "__main__":
         sys.exit(0)
 
     print("Initializing Flask server")
-    app.run(
-        config["public-address"],
-        config["port"],
-        DEBUG
-    )
+    if config["https"]["enabled"]:
+        app.run(
+            config["public-address"],
+            config["port"],
+            DEBUG,
+            ssl_context=(config["https"]["cert-file"], config["https"]["key-file"])
+        )
+    else:
+        app.run(
+            config["public-address"],
+            config["port"],
+            DEBUG
+        )

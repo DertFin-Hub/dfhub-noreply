@@ -4,6 +4,11 @@
   "smtp-address" : "smtp.gmail.com",
   "smtp-port" : 587,
   "is-ssl" : false,
+  "https" : {
+    "enabled" : false,
+    "cert-file" : "path/to/cert.pem",
+    "key-file" : "path/to/key.pem"
+  },
   "accessed-ips" : [
     "127.0.0.1"
   ]

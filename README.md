@@ -11,6 +11,11 @@
 `smtp-address`- адресс [SMTP](https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol)-сервера
 `smtp-port` - порт SMTP-сервера. Обычно - `587`
 `accessed-ips` - вайтлист адресов, с которых можно отправлять запросы на Ваш сервер
+`is-ssl` - использует ли SMTP-сервер SSL *(по-стандарту false - используется TLS)*
+
+`https.enables` - использовать ли SSL для DFHub-NoReply
+`https.cert-file` - путь к `.pem` файлу с сертификатом
+`https.key-file` - путь к приватному `.pem`-ключу от сертификата
 
 Создайте файл `.env` в той же директории, что и сама программа и укажите следующие параметры:
 ```.env
