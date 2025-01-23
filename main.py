@@ -41,7 +41,7 @@ def send_raw():
         abort(400, description="JSON param \"context\" is not specified!")
 
     try:
-        smtp.sendmail(os.getenv("DFHUB_NOREPLY_APP_MAIL"), json_body["to"], f"Subject: {json_body["subject"]}\n\n{json_body["context"]}".encode("utf-8"))
+        smtp.sendmail(os.getenv("DFHUB_NOREPLY_APP_MAIL"), json_body["to"], f"Subject: {json_body['subject']}\n\n{json_body['context']}".encode("utf-8"))
         return "Message request sent!"
     except SMTPException:
         return abort(500, "An internal error occurred while sending a message")
