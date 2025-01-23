@@ -1,5 +1,5 @@
 {
-  "public-address" : "127.0.0.1",
+  "public-address" : "0.0.0.0",
   "port" : 8080,
   "smtp-address" : "smtp.gmail.com",
   "smtp-port" : 587,
